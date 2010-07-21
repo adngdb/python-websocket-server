@@ -1,0 +1,9 @@
+Here is a WebSocket Server Python implementation. Use it to communicate with your web pages.
+
+This code is based on a code by Eneko Alonso : http://dev.enekoalonso.com/2010/05/22/more-websockets-now-with-python/
+
+To adapt this code to your project, change the config.py file, and do your stuff in the onreceive function of the WebSocketClient class.
+
+For any question about this code : adrian at gaudebert dot fr
+
+Released under MIT License. See LICENSE.
