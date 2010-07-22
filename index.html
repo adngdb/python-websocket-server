@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" >
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+        <script type="text/javascript">
+
+// Configuration
+var host = "localhost";
+var port = "9876";
+
+// WebSocket connection object
+var ws;
+
+function init() {
+    // Connect to Web Socket
+    ws = new WebSocket("ws://" + host + ":" + port + "/");
+
+    // Set event handlers.
+    ws.onopen = function() {
+        output("onopen");
+    };
+    ws.onclose = function() {
+        output("onclose");
+    };
+    ws.onmessage = function(e) {
+        process(e.data);
+    };
+}
+
+function output(str) {
+  alert(str);
+}
+
+// What to do when receiving a message from the server
+function process(str) {
+    $('#chat').append('<p>' + str + '</p>')
+}
+
+$(document).ready(function() {
+    init();
+
+    $('#send').click(function(e) {
+        e.preventDefault();
+        var text = $('#chat_text').attr('value');
+        ws.send(text);
+        $('#chat_text').attr('value', '');
+    });
+});
+
+        </script>
+    </head>
+    <body>
+            <input type="text" name="chat_text" id="chat_text" />
+            <button type="submit" id="send">Send</button>
+
+            <div id="chat"></div>
+    </body>
+</html>
