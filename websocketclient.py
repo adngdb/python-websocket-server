@@ -17,14 +17,14 @@ class WebSocketClient(threading.Thread):
     def run(self):
         # Handshaking, create the WebSocket connection
         handshake = "HTTP/1.1 101 Web Socket Protocol Handshake\r\nUpgrade: WebSocket\r\nConnection: Upgrade\r\nWebSocket-Origin: http://%s\r\nWebSocket-Location: ws://%s/\r\nWebSocket-Protocol: sample\r\n\r\n" % (config.httphost, config.sockethost)
-        self.s.send(handshake)
+        self.s.send(handshake.encode())
         data = self.s.recv(1024)
 
         # Receive and handle data
         while 1:
             data = self.s.recv(1024)
             if not data: break
-            print 'Data from', self.addr, ':', data
+            print('Data from', self.addr, ':', data)
             self.onreceive(data)
 
         # Close the client connection
@@ -34,15 +34,15 @@ class WebSocketClient(threading.Thread):
         """
         Close this connection
         """
-        print 'Client closed: ', self.addr
-        self.server.remove(self.s)
+        print('Client closed: ', self.addr)
+        self.server.remove(self)
         self.s.close()
 
     def send(self, msg):
         """
         Send a message to this client
         """
-        msg = '\x00' + msg + '\xff'
+        msg = b'\x00' + msg + b'\xff'
         self.s.send(msg)
 
     def onreceive(self, data):
@@ -59,6 +59,6 @@ class WebSocketClient(threading.Thread):
         """
         Remove special chars used for the transmission
         """
-        msg = msg.replace('\x00', '', 1)
-        msg = msg.replace('\xff', '', 1)
+        msg = msg.replace(b'\x00', b'', 1)
+        msg = msg.replace(b'\xff', b'', 1)
         return msg
